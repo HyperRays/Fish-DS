@@ -15,6 +15,7 @@
       integer, dimension(prof_n) :: prof_c !counts interval entries
       real, dimension(prof_n) :: prof_t0 !stores time of entry
       real, dimension(prof_n) :: prof_t !accumulates interval cpu time
+      character(len=50) :: directory !which folder to write logs to
 
       contains
 
@@ -33,9 +34,23 @@
       prof_l = ' '
       prof_c = 0
       prof_t = 0.
+      directory = "./"
       call prof_enter(prof_n,'total')
 
       end subroutine prof_initial
+
+!=======================================================================
+!
+!     this subroutine is optional and sets the output directory
+!
+!=======================================================================
+
+      subroutine prof_directory(dir)
+            
+            character(len=*), intent(in) :: dir
+            write(directory, *) dir
+
+      end subroutine prof_directory
      
 !=======================================================================
 !
@@ -87,12 +102,12 @@
 
 !-----------------------------------------------------------------------
 
-      character(len=16) :: filename
+      character(len=50) :: filename
       integer :: i
 
 !.....creat filename that reflects rank of process......................
-      write(filename,44) mr
-44    format('profile_',i4,'.dat')
+      write(filename,44) trim(directory),mr
+44    format(A,'profile_',i4,'.dat')
       do i=1,14
         if (filename(i:i).eq.' ') filename(i:i)='0'
       enddo

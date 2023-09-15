@@ -21,10 +21,16 @@
       character(len=4) :: fn
       integer :: iter
       real :: time,dt,vstep
-      dt = 0.01
+      character(len=50) :: dir
+
+      ! initialize dt to an value less than cflsav so that during 
+      ! mhd_cfl subprocess it does not cmp to NaN value 
+      ! Note: mhd_cfl anyways resets the dt value
+      dt = 0
 
 !.....initialize numerics...............................................
       call prof_initial
+      call prof_directory(logdir)
       call mhd_memory
       call read_restart_loc
 
@@ -35,7 +41,9 @@
           if (fn(iter:iter).eq.' ') fn(iter:iter) = '0'
         enddo
 22      format(i4)
-        open(6,file='scratch_'//fn//'.log',status='unknown')
+        write(dir, 77) trim(logdir), fn
+77      format(A,'scratch_',A,'.log')
+        open(6,file=trim(dir),status='unknown')
       endif
 
 !-----build initial state-----------------------------------------------
