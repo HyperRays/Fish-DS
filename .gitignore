@@ -31,5 +31,10 @@
 *.out
 *.app
 
-dest
-data
+# file destination directories
+fish-basic/dest/*
+fish-basic/data/*
+fish-basic/logs/*
+
+
+fish-basic/fish
