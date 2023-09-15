@@ -183,6 +183,8 @@
       call prof_enter(3,'calcfl')
       call calcfl(s,v,nx,ny,nz,cfl)
       call prof_exit(3)
+      !debug:
+      ! write(*,"(a,f,f,i)") "[cfl, dt, mr] : ", cfl, dt, mr 
       if (mr.eq.0) then
         if (cfl.lt.dt) then
           write(6,*) 'previous step: ',dt

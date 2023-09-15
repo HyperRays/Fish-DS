@@ -21,6 +21,7 @@
       character(len=4) :: fn
       integer :: iter
       real :: time,dt,vstep
+      dt = 0.01
 
 !.....initialize numerics...............................................
       call prof_initial
