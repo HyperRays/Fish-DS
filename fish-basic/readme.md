@@ -51,7 +51,7 @@ x-direction, they are exactly the same in the y-direction and z-direction:
 
 The indexing is handled by a data structure named comm_wld that is defined
 in comm_module.f90:
-
+```
       type comm_wld
         integer :: d !global label of direction {x=1,y=2,z=3}
         integer :: g !global number of zones in that direction
@@ -85,6 +85,7 @@ global: r+1     r+m            r+n     r+l
                                 local:   1       m              n       l
                                 global: r+1     r+m            r+n     r+l
 
+```
 These conventions apply to all directions and are stored in variables
 nx,ny,nz, each being of above type comm_wld. For example nx%g is the
 total number of zones in x-direction, ny%l is the local array length
@@ -333,6 +334,8 @@ data are (or from anywhere and then use 'cd' within matlab to change
 the directory to where the data are). At the matlab prompt, use e.g.
 
 drawslice for slices through the main planes:
+```
 >> help drawslice
 >> drawslice('data',0,1,1e6*[-1 1 -1 1 -1 1]);
 >> drawslice('data',0,1,5e8*[-1 1 -1 1 -1 1])
+```
