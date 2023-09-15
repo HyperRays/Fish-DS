@@ -6,7 +6,7 @@ FC = mpiifort -c -heap-arrays                  #compile
 LK = mpiifort -o fish              #link
 SF = -mcmodel=medium -shared-intel -no-ip -double-size 64 -fpp -traceback    #compile flags
 # CF = $(SF) -O2               #optimization flags
-CF = $(SF) -g -debug -fpstkchk -C -ftrapuv -warn interfaces #debug flags
+CF = $(SF) -g -debug -fp-stack-check -C -ftrapuv -warn interfaces #debug flags
 
 mhd = source/
 
@@ -28,6 +28,8 @@ fish:\
   $(OBJS); $(LK) $(CF) $(OBJS) $(LDLIBS);\
   mv *.o dest;\
   mv *.mod dest;\
+  mv *genmod* dest;\
+
 
 comm_module.o:\
   mhd_parameter_module.o\
