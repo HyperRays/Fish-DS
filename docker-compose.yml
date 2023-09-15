@@ -1,0 +1,9 @@
+version: '3.1'
+
+services:
+  mycontainer:
+    build: .
+    volumes:
+      - '.:/app/'  
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
