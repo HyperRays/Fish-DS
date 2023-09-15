@@ -44,7 +44,7 @@
 !.....physics...........................................................
       real, parameter :: cflsav=0.75 !safety for cfl condition
       real, parameter :: dx=1.       !physical width of one zone
-      real, parameter :: tf=100000. !stop time
+      real, parameter :: tf=20. !stop time
 
 !.....file handling.....................................................
       character(12), parameter :: name='data' !name of run
@@ -54,7 +54,7 @@
      &  txtpath='./data/'  !path for ascii
       character(44), parameter :: &
      &  glbpath='./data/'   !path for restart files
-     character(44), parameter :: &
+     character(20), parameter :: &
      &  logdir='./logs/'   !path for restart files
       integer, parameter :: skip=5    !skip for bin and txt output 5
       integer, parameter :: dmpskip=5 !skip for restart files 5

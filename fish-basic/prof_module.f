@@ -15,7 +15,7 @@
       integer, dimension(prof_n) :: prof_c !counts interval entries
       real, dimension(prof_n) :: prof_t0 !stores time of entry
       real, dimension(prof_n) :: prof_t !accumulates interval cpu time
-      character(len=50) :: directory !which folder to write logs to
+      character(len=20) :: directory !which folder to write logs to
 
       contains
 
@@ -103,14 +103,18 @@
 !-----------------------------------------------------------------------
 
       character(len=50) :: filename
+      character(len=4) :: fn
       integer :: i
 
 !.....creat filename that reflects rank of process......................
-      write(filename,44) trim(directory),mr
-44    format(A,'profile_',i4,'.dat')
-      do i=1,14
-        if (filename(i:i).eq.' ') filename(i:i)='0'
+
+      write(fn,77) mr
+77    format(i4)
+      do i=1,4
+            if (fn(i:i).eq.' ') fn(i:i) = '0'
       enddo
+      write(filename,44) trim(directory),fn
+44    format(A,'profile_',A,'.dat')
       open(1,file=trim(filename),status='unknown')
 
       write(1,11)

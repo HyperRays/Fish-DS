@@ -5,8 +5,8 @@ LDLIBS= -I/soft/intel/mkl721/include -L/soft/intel/mkl721/lib/em64t \
 FC = mpiifort -c -heap-arrays                  #compile
 LK = mpiifort -o fish              #link
 SF = -mcmodel=medium -shared-intel -no-ip -double-size 64 -fpp -traceback    #compile flags
-# CF = $(SF) -O2               #optimization flags
-CF = $(SF) -g -debug -fp-stack-check -C -ftrapuv -warn interfaces #debug flags
+CF = $(SF) -O2               #optimization flags
+# CF = $(SF) -g -debug -fp-stack-check -C -ftrapuv -warn interfaces #debug flags
 
 mhd = source/
 
