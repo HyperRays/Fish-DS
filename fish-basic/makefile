@@ -28,7 +28,6 @@ fish:\
   $(OBJS); $(LK) $(CF) $(OBJS) $(LDLIBS);\
   mv *.o dest;\
   mv *.mod dest;\
-  mv fish dest
 
 comm_module.o:\
   mhd_parameter_module.o\
