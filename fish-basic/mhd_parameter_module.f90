@@ -55,7 +55,7 @@
       character(44), parameter :: &
      &  glbpath='./data/'   !path for restart files
      character(20), parameter :: &
-     &  logdir='./logs/'   !path for restart files
+     &  logdir='./logs/'   !path for logfiles
       integer, parameter :: skip=5    !skip for bin and txt output 5
       integer, parameter :: dmpskip=5 !skip for restart files 5
       integer :: restart=0 !where to restart
