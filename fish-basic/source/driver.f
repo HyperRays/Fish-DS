@@ -29,8 +29,7 @@
       dt = 0
 
 !.....initialize numerics...............................................
-      call prof_initial
-      call prof_directory(logdir)
+      call prof_initial(logdir)
       call mhd_memory
       call read_restart_loc
 

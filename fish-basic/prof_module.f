@@ -25,8 +25,9 @@
 !
 !=======================================================================
 
-      subroutine prof_initial
-
+      subroutine prof_initial(dir)
+      
+      character(len=*), intent(in), optional :: dir ! option log output directory
       real :: dummy
 
       call cpu_time(dummy)
@@ -34,23 +35,10 @@
       prof_l = ' '
       prof_c = 0
       prof_t = 0.
-      directory = "./"
+      write(directory, "(A)") dir 
       call prof_enter(prof_n,'total')
 
       end subroutine prof_initial
-
-!=======================================================================
-!
-!     this subroutine is optional and sets the output directory
-!
-!=======================================================================
-
-      subroutine prof_directory(dir)
-            
-            character(len=*), intent(in) :: dir
-            write(directory, *) dir
-
-      end subroutine prof_directory
      
 !=======================================================================
 !
