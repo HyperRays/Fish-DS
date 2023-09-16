@@ -6,6 +6,8 @@
 
       subroutine sweep(forward,update,yzbin,xb,yzbout,s,v,nx,ny,nz,dt)
 
+      use comm_module
+
       implicit none
 
       external update

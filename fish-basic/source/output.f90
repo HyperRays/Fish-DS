@@ -6,6 +6,8 @@
 
       subroutine output(num,time,s,v,nx,ny,nz)
 
+      use comm_module
+
       implicit none
 
       integer, intent(in) :: num
