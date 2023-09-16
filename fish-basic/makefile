@@ -2,11 +2,11 @@ LDLIBS= -I/soft/intel/mkl721/include -L/soft/intel/mkl721/lib/em64t \
         -I/soft/mpich-1.2.7p1/intel_v9/include \
         -qmkl -lpthread
 
-FC = mpiifort -c -heap-arrays                  #compile
+FC = mpiifort -c                   #compile
 LK = mpiifort -o fish              #link
-SF = -mcmodel=medium -shared-intel -no-ip -double-size 64 -fpp -traceback    #compile flags
+# SF = -mcmodel=medium -shared-intel -no-ip -double-size 64 -fpp -traceback    #compile flags
 CF = $(SF) -O2               #optimization flags
-# CF = $(SF) -g -debug -fp-stack-check -C -ftrapuv -warn interfaces #debug flags
+CF = $(SF) -g -debug -fp-stack-check -C -ftrapuv -warn interfaces -traceback #debug flags
 
 mhd = source/
 
@@ -26,9 +26,11 @@ OBJS =\
 
 fish:\
   $(OBJS); $(LK) $(CF) $(OBJS) $(LDLIBS);\
+  ulimit -s unlimited;\
   mv *.o dest;\
   mv *.mod dest;\
   mv *genmod* dest;\
+
 
 
 comm_module.o:\
