@@ -3,7 +3,8 @@
 
 # Installation
 
-Make sure you have docker installed
+Make sure you have docker installed. 
+
 run `docker compose up` this will set up the docker container and start it
 since the image is quite large it may take up to 20 min
 
