@@ -2,20 +2,27 @@ LDLIBS= -I/soft/intel/mkl721/include -L/soft/intel/mkl721/lib/em64t \
         -I/soft/mpich-1.2.7p1/intel_v9/include \
         -qmkl -lpthread
 
+mhd = source/
+
+
+# ---------- COMPILE FLAGS ----------
 
 FC = mpiifort -c                  #compile
 LK = mpiifort -o fish             #link
 
 HA = -heap-arrays                 # stack overflow/limit workaround
-OPF = -O2                         #optimization flags
+OF = -O2                          # Optimization Flags
 
-SF = -mcmodel=medium -shared-intel -no-ip -double-size 64 -fpp #default compile flags
+SF = -mcmodel=medium -shared-intel -no-ip -double-size 64 -fpp #Standard Flags
 
-# DF = -g -debug -fp-stack-check -C -ftrapuv -warn interfaces -traceback #debug flags
+DF = -g -debug -fp-stack-check -C -ftrapuv -warn interfaces -traceback #Debug Flags
 
-CF = $(HA) $(OPF) $(SF) $(SF) $(DF)
+CF = $(HA) $(OF) $(SF) $(SF) $(DF) # Combined Flags
 
-mhd = source/
+# ------- END OF COMPILE FLAGS ------
+
+
+# --------  MAKEFILE ORDERS ---------
 
 DEFAULT_RUN = \
   fish\
@@ -35,16 +42,20 @@ OBJS =\
   tvdb.o\
   tvdeul.o\
 
-# BUILD ORDER RULES
+# ------ ENF OF MAKEFILE ORDERS -----
+
+
+
+# ---------------- BUILD ORDER RULES
 
 default:\
   $(DEFAULT_RUN)
 
-clean-all:\
+clean-all:\                              # quality-of-life clean rule
   clean_logs\
   clean_data\
 
-# BUILD RULES
+# ---------------- BUILD RULES
 
 fish:\
   $(OBJS); $(LK) $(CF) $(OBJS) $(LDLIBS);\
@@ -104,11 +115,11 @@ tvdeul.o:\
   $(mhd)$(@:.o=.f90); $(FC) $(CF) $(mhd)$(@:.o=.f90)
 
 
-# FILE CLEANUP & BASH SETTING RULES
+# ---- FILE CLEANUP & BASH SETTING RULES
 
-FORCE:
+FORCE:                                  # force the execution of a rule
 
-EOMF:\
+EOMF:\                                  # rule to run at end of make file (default flow)
   set_stack_limit\
   cp_out_files\
   create_aux_folders\
@@ -117,13 +128,13 @@ set_stack_limit:\
   FORCE;\
   ulimit -s unlimited;\
 
-cp_out_files:\
+cp_out_files:\                          # copies all obj, mod, etc. files to dest folder
   FORCE;\
   mv *.o dest;\
   mv *.s dest;\
   mv *.mod dest;\
   mv *genmod* dest;\
-  true
+  true                                  # continue regardless of success of previous commands
 
 
 clean_data: FORCE; rm -rf data/*; true
@@ -133,7 +144,7 @@ create_aux_folders:\
   FORCE;\
   mkdir dest;\
   mkdir logs;\
-  true
+  true                                  # continue regardless of success of previous commands
   
 
 
