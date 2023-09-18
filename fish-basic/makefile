@@ -10,7 +10,11 @@ mhd = source/
 FC = mpiifort -c                  #compile
 LK = mpiifort -o fish             #link
 
-HA = -heap-arrays                 # stack overflow/limit workaround
+HA = -heap-arrays                 # stack overflow/limit workaround 
+                                  # Due to memory limitations even with unlimited
+                                  # stack size it is nessesary to enable this flag
+                                  # to not have segfault due to stack-overflow
+
 OF = -O2                          # Optimization Flags
 
 SF = -mcmodel=medium -shared-intel -no-ip -double-size 64 -fpp #Standard Flags
