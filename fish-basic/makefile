@@ -11,7 +11,7 @@ LK = mpiifort -o fish             # link
 HA = -heap-arrays                 # stack overflow/limit workaround 
                                   # Due to memory limitations even with unlimited
                                   # stack size it is necessary to enable this flag
-                                  # to not have segfault due to stack-overflow
+                                  # to prevent segfault due to stack-overflow
 
 OMPF = -qopenmp                   # OpenMP Flags
 OF = -O2                          # Optimization Flags
