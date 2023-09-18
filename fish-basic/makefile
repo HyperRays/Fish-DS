@@ -27,11 +27,11 @@ OBJS =\
 fish:\
   $(OBJS); $(LK) $(CF) $(OBJS) $(LDLIBS);\
   ulimit -s unlimited;\
-  mkdir logs;\
-  mkdir dest;\
-  mv *.o dest;\
-  mv *.mod dest;\
-  mv *genmod* dest;\
+  mkdir -p logs;\
+  mkdir -p dest;\
+  mv *.o dest >> /dev/null;\
+  mv *.mod dest >> /dev/null;\
+  mv *genmod* dest >> /dev/null;\
 
 
 
