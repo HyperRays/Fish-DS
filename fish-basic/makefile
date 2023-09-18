@@ -17,7 +17,7 @@ HA = -heap-arrays                 # stack overflow/limit workaround
 OMPF = -qopenmp                   # OpenMP Flags
 OF = -O2                          # Optimization Flags
 SF = -mcmodel=medium -shared-intel -no-ip -double-size 64 -fpp # Standard Flags
-DF = -g -debug -fp-stack-check -C -ftrapuv -warn interfaces -traceback # Debug Flags
+# DF = -g -debug -fp-stack-check -C -ftrapuv -warn interfaces -traceback # Debug Flags
 CF = $(HA) $(OF) $(SF) $(DF) $(OMPF) # Combined Flags
 
 
@@ -138,5 +138,5 @@ clean_logs: FORCE
 
 
 create_aux_folders: FORCE
-	mkdir -p dest
-	mkdir -p logs
+	@mkdir -p dest
+	@mkdir -p logs
