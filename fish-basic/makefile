@@ -2,13 +2,24 @@ LDLIBS= -I/soft/intel/mkl721/include -L/soft/intel/mkl721/lib/em64t \
         -I/soft/mpich-1.2.7p1/intel_v9/include \
         -qmkl -lpthread
 
-FC = mpiifort -c                   #compile
-LK = mpiifort -o fish              #link
-# SF = -mcmodel=medium -shared-intel -no-ip -double-size 64 -fpp -traceback    #compile flags
-CF = $(SF) -O2               #optimization flags
-CF = $(SF) -g -debug -fp-stack-check -C -ftrapuv -warn interfaces -traceback #debug flags
+
+FC = mpiifort -c                  #compile
+LK = mpiifort -o fish             #link
+
+HA = -heap-arrays                 # stack overflow/limit workaround
+OPF = -O2                         #optimization flags
+
+SF = -mcmodel=medium -shared-intel -no-ip -double-size 64 -fpp #default compile flags
+
+# DF = -g -debug -fp-stack-check -C -ftrapuv -warn interfaces -traceback #debug flags
+
+CF = $(HA) $(OPF) $(SF) $(SF)
 
 mhd = source/
+
+DEFAULT_RUN = \
+  fish\
+  EOMF\
 
 OBJS =\
   comm_module.o\
@@ -24,14 +35,15 @@ OBJS =\
   tvdb.o\
   tvdeul.o\
 
+# BUILD ORDER RULES
+
+default:\
+  $(DEFAULT_RUN)
+
+# BUILD RULES
+
 fish:\
   $(OBJS); $(LK) $(CF) $(OBJS) $(LDLIBS);\
-  ulimit -s unlimited;\
-  mv *.o dest;\
-  mv *.mod dest;\
-  mv *genmod* dest;\
-
-
 
 comm_module.o:\
   mhd_parameter_module.o\
@@ -86,3 +98,26 @@ tvdeul.o:\
   mhd_parameter_module.o\
   mhd_module.o\
   $(mhd)$(@:.o=.f90); $(FC) $(CF) $(mhd)$(@:.o=.f90)
+
+
+# FILE CLEANUP & BASH SETTING RULES
+
+FORCE:
+
+EOMF:\
+  set_stack_limit\
+  cp_out_files
+
+set_stack_limit:\
+  FORCE;\
+  ulimit -s unlimited;\
+
+cp_out_files:\
+  FORCE;\
+  mv *.o dest;\
+  mv *.s dest;\
+  mv *.mod dest;\
+  mv *genmod* dest;\
+
+
+
