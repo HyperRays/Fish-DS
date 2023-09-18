@@ -13,7 +13,7 @@ SF = -mcmodel=medium -shared-intel -no-ip -double-size 64 -fpp #default compile 
 
 # DF = -g -debug -fp-stack-check -C -ftrapuv -warn interfaces -traceback #debug flags
 
-CF = $(HA) $(OPF) $(SF) $(SF)
+CF = $(HA) $(OPF) $(SF) $(SF) $(DF)
 
 mhd = source/
 
@@ -39,6 +39,10 @@ OBJS =\
 
 default:\
   $(DEFAULT_RUN)
+
+clean-all:\
+  clean_logs\
+  clean_data\
 
 # BUILD RULES
 
@@ -106,7 +110,8 @@ FORCE:
 
 EOMF:\
   set_stack_limit\
-  cp_out_files
+  cp_out_files\
+  create_aux_folders\
 
 set_stack_limit:\
   FORCE;\
@@ -118,6 +123,18 @@ cp_out_files:\
   mv *.s dest;\
   mv *.mod dest;\
   mv *genmod* dest;\
+  true
+
+
+clean_data: FORCE; rm -rf data/*; true
+clean_logs: FORCE; rm -rf logs/*; true
+
+create_aux_folders:\
+  FORCE;\
+  mkdir dest;\
+  mkdir logs;\
+  true
+  
 
 
 
