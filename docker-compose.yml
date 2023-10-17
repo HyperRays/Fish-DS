@@ -2,6 +2,7 @@ version: '3.1'
 
 services:
   devenv:
+    platform: linux/amd64
     build: .
     volumes:
       - '.:/app/'  
