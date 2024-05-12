@@ -37,7 +37,7 @@
       integer, parameter :: nxg=240 !number of zones along x direction
       integer, parameter :: nyg=240 !number of zones along y direction
       integer, parameter :: nzg=240 !number of zones along z direction
-      integer, parameter :: nmax=120 !maximum n for a local cube
+      integer, parameter :: nmax=240 !maximum n for a local cube
       integer, parameter :: yzbuf=4 !permanent xyz overlap between cubes
       integer, parameter :: buf=11 !permanent+volatile buffer length
 

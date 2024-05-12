@@ -2,7 +2,10 @@ LDLIBS= -I/soft/intel/mkl721/include -L/soft/intel/mkl721/lib/em64t \
 				-I/soft/mpich-1.2.7p1/intel_v9/include \
 				-qmkl -lpthread
 
-mhd = source/
+mhd = /app/fish-basic/source
+dest = /app/fish-basic/dest
+
+cngdir = cd $(dest)
 
 
 # ---------- COMPILE FLAGS ----------
@@ -18,7 +21,8 @@ OMPF = -qopenmp                   # OpenMP Flags
 OF = -O2                          # Optimization Flags
 SF = -mcmodel=medium -shared-intel -double-size 64 -fpp # Standard Flags
 # DF = -g -debug -fp-stack-check -C -ftrapuv -warn interfaces -traceback # Debug Flags
-CF = $(HA) $(OF) $(SF) $(DF) $(OMPF) # Combined Flags
+CUF = $(HA) $(OF) $(SF) $(DF) $(OMPF) # Combined Uncleaned Flags
+CF = $(shell echo $(CUF) | tr -d '\t')  # Combined Flags
 
 
 # ------- END OF COMPILE FLAGS ------
@@ -27,105 +31,97 @@ CF = $(HA) $(OF) $(SF) $(DF) $(OMPF) # Combined Flags
 DEFAULT_RUN = flags fish EOMF
 
 OBJS = \
-	comm_module.o \
-	decompose.o \
-	driver.o \
-	empty.o \
-	eos.o \
-	euler.o \
-	init.o \
-	mhd_module.o \
-	mhd_parameter_module.o \
-	prof_module.o \
-	tvdb.o \
-	tvdeul.o
+	$(dest)/comm_module.o \
+	$(dest)/decompose.o \
+	$(dest)/driver.o \
+	$(dest)/empty.o \
+	$(dest)/eos.o \
+	$(dest)/euler.o \
+	$(dest)/init.o \
+	$(dest)/mhd_module.o \
+	$(dest)/mhd_parameter_module.o \
+	$(dest)/prof_module.o \
+	$(dest)/tvdb.o \
+	$(dest)/tvdeul.o
 
 # ----- END OF MAKEFILE ORDERS ------
 
 # ---------------- BUILD ORDER RULES
+.PHONY: default flags clean-all
 default: $(DEFAULT_RUN)
 
 flags: FORCE
-	@echo "Using flags: $(shell echo $(CF) | tr -d '\t') \n"
+	@echo "Using flags: $(CF) \n"
 
 
-clean-all: clean_data clean_logs
+clean-all clean_all ca: clean_data clean_logs clean_out
 	@echo "deleting executable"
 	@rm -f fish
 
 # ---------------- BUILD RULES
 fish: $(OBJS)
-	@echo "Building: "$@
+	@echo "Building: "$@ 
 	@$(LK) $(CF) $(OBJS) $(LDLIBS)
 
-comm_module.o: mhd_parameter_module.o $(mhd)$(@:.o=.f90)
-	@echo "Building: "$@
-	@$(FC) $(CF) $(mhd)$(@:.o=.f90)
+$(dest)/comm_module.o: $(mhd)/comm_module.f90 $(dest)/mhd_parameter_module.o 
+	@echo "Building: "$@ \($<\)
+	@$(cngdir);$(FC) $(CF) $<
 
-decompose.o: $(mhd)$(@:.o=.f90)
-	@echo "Building: "$@
-	@$(FC) $(CF) $(mhd)$(@:.o=.f90)
+$(dest)/decompose.o: $(mhd)/decompose.f90
+	@echo "Building: "$@ \($<\)
+	@$(cngdir);$(FC) $(CF) $<
 
-driver.o: mhd_module.o prof_module.o $(mhd)$(@:.o=.f)
-	@echo "Building: "$@
-	@$(FC) $(CF) $(mhd)$(@:.o=.f)
+$(dest)/driver.o: $(mhd)/driver.f $(dest)/mhd_module.o $(dest)/prof_module.o 
+	@echo "Building: "$@ \($<\)
+	@$(cngdir);$(FC) $(CF) $<
 
-empty.o: $(mhd)$(@:.o=.f90)
-	@echo "Building: "$@
-	@$(FC) $(CF) $(mhd)$(@:.o=.f90)
+$(dest)/empty.o: $(mhd)/empty.f90 $(dest)/comm_module.o
+	@echo "Building: "$@ \($<\)
+	@$(cngdir);$(FC) $(CF) $<
 
-eos.o: mhd_parameter_module.o $(mhd)$(@:.o=.f90)
-	@echo "Building: "$@
-	@$(FC) $(CF) $(mhd)$(@:.o=.f90)
+$(dest)/eos.o: $(mhd)/eos.f90 $(dest)/mhd_parameter_module.o 
+	@echo "Building: "$@ \($<\)
+	@$(cngdir);$(FC) $(CF) $<
 
-euler.o: mhd_parameter_module.o prof_module.o $(mhd)$(@:.o=.f90)
-	@echo "Building: "$@
-	@$(FC) $(CF) $(mhd)$(@:.o=.f90)
+$(dest)/euler.o: $(mhd)/euler.f90 $(dest)/mhd_parameter_module.o $(dest)/prof_module.o $(dest)/comm_module.o
+	@echo "Building: "$@ \($<\)
+	@$(cngdir);$(FC) $(CF) $<
 
-init.o: mhd_parameter_module.o $(mhd)$(@:.o=.f90)
-	@echo "Building: "$@
-	@$(FC) $(CF) $(mhd)$(@:.o=.f90)
+$(dest)/init.o: $(mhd)/init.f90 $(dest)/mhd_parameter_module.o $(dest)/comm_module.o
+	@echo "Building: "$@ \($<\)
+	@$(cngdir);$(FC) $(CF) $<
 
-mhd_module.o: comm_module.o mhd_parameter_module.o prof_module.o \
-							$(mhd)calcfl.f90 $(mhd)transpose.f90 $(mhd)sweep.f90 \
-							$(mhd)readdmp.f90 $(mhd)writdmp.f90 $(mhd)output.f90 $(mhd)$(@:.o=.f90)
-	@echo "Building: "$@
-	@$(FC) $(CF) $(mhd)$(@:.o=.f90)
+$(dest)/mhd_module.o: $(mhd)/mhd_module.f90 $(dest)/comm_module.o $(dest)/mhd_parameter_module.o $(dest)/prof_module.o \
+							$(mhd)/calcfl.f90 $(mhd)/transpose.f90 $(mhd)/sweep.f90 \
+							$(mhd)/readdmp.f90 $(mhd)/writdmp.f90 $(mhd)/output.f90 
+	@echo "Building: "$@ \($<\)
+	@$(cngdir);$(FC) $(CF) $<
 
-mhd_parameter_module.o: $(@:.o=.f90)
-	@echo "Building: "$@
-	@$(FC) $(CF) $(@:.o=.f90)
+$(dest)/mhd_parameter_module.o: $(mhd)/mhd_parameter_module.f90
+	@echo $(@:.o=.f90)
+	@echo "Building: "$@ \($<\)
+	@$(cngdir);$(FC) $(CF) $<
 
-prof_module.o: $(@:.o=.f)
-	@echo "Building: "$@
-	@$(FC) $(CF) $(@:.o=.f)
+$(dest)/prof_module.o: $(mhd)/prof_module.f
+	@echo "Building: "$@ \($<\)
+	@$(cngdir);$(FC) $(CF) $<
 
-tvdb.o: $(mhd)$(@:.o=.f90)
-	@echo "Building: "$@
-	@$(FC) $(CF) $(mhd)$(@:.o=.f90)
+$(dest)/tvdb.o: $(mhd)/tvdb.f90
+	@echo "Building: "$@ \($<\)
+	@$(cngdir);$(FC) $(CF) $<
 
-tvdeul.o: mhd_parameter_module.o mhd_module.o $(mhd)$(@:.o=.f90)
-	@echo "Building: "$@
-	@$(FC) $(CF) $(mhd)$(@:.o=.f90)
+$(dest)/tvdeul.o: $(mhd)/tvdeul.f90 $(dest)/mhd_parameter_module.o $(dest)/mhd_module.o 
+	@echo "Building: "$@ \($<\)
+	@$(cngdir);$(FC) $(CF) $<
 
 # ---- FILE CLEANUP & BASH SETTING RULES
+.PHONY: FORCE EOMF clean_data clean_logs clean_out create_aux_folders
 FORCE:                                  # force the execution of a rule
 
-EOMF: set_stack_limit cp_out_files create_aux_folders                               # rule to run at the end of make file (default flow)
-
-set_stack_limit: FORCE
-	@echo "setting stack limit to unlimited"
-	@ulimit -s unlimited || set stacksize unlimited || true  
+EOMF: create_aux_folders                               # rule to run at the end of make file (default flow)
 
 # continue regardless of the success of command: || true
 # supress output: 2>/dev/null
-
-cp_out_files: FORCE
-	@echo "moving files to dest"
-	@mv *.o dest 2>/dev/null || true
-	@mv *.s dest 2>/dev/null || true
-	@mv *.mod dest 2>/dev/null || true
-	@mv *genmod* dest 2>/dev/null || true
 
 clean_data: FORCE
 	@echo "cleaning data files"
@@ -136,6 +132,9 @@ clean_logs: FORCE
 	@echo "cleaning log files"
 	@rm -rf logs/*
 
+clean_out: FORCE
+	@echo "cleaning out files"
+	@rm -rf dest/*
 
 create_aux_folders: FORCE
 	@mkdir -p dest
