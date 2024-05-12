@@ -6,8 +6,8 @@ mhd = source/
 
 
 # ---------- COMPILE FLAGS ----------
-FC = mpiifort -c                  # compile
-LK = mpiifort -o fish             # link
+FC = mpiifort -fc=ifx -c                  # compile
+LK = mpiifort -fc=ifx -o fish             # link
 
 HA = -heap-arrays                 # stack overflow/limit workaround 
 																	# Due to memory limitations even with unlimited
@@ -16,7 +16,7 @@ HA = -heap-arrays                 # stack overflow/limit workaround
 
 OMPF = -qopenmp                   # OpenMP Flags
 OF = -O2                          # Optimization Flags
-SF = -mcmodel=medium -shared-intel -no-ip -double-size 64 -fpp # Standard Flags
+SF = -mcmodel=medium -shared-intel -double-size 64 -fpp # Standard Flags
 # DF = -g -debug -fp-stack-check -C -ftrapuv -warn interfaces -traceback # Debug Flags
 CF = $(HA) $(OF) $(SF) $(DF) $(OMPF) # Combined Flags
 

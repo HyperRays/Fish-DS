@@ -86,7 +86,7 @@ G = 1;
   x = [x0-nx/2-0.5:x0+nx/2-1-0.5]'*dx;
   y = [y0-ny/2-0.5:y0+ny/2-1-0.5]'*dx;
   z = [z0-nz/2-0.5:z0+nz/2-1-0.5]'*dx;
-  
+
 % zoom into data
   [ans,imin] = min(abs(x-range(1)*ones(size(x))));
   [ans,imax] = min(abs(x-range(2)*ones(size(x))));
@@ -102,7 +102,7 @@ G = 1;
   z = z(kmin:kmax);
   u = u(:,imin:imax,jmin:jmax,kmin:kmax);
   [X,Y,Z] = ndgrid(x,y,z);
-  
+
   disp('drawing');
 
   figure(1);
@@ -210,7 +210,7 @@ G = 1;
   vx = reshape(vx,nx,ny);
   vy = reshape(vy,nx,ny);
   [xx,yy] = meshgrid(x,y);
-  str = streamslice(xx,yy,vx',vy');
+  str = streamline(xx,yy,vx',vy');
   set(str,'Color','r');
 
 % vector arrows
