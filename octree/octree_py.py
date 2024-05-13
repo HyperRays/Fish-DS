@@ -31,6 +31,13 @@ class Vec3:
             self.y << other,
             self.z << other
         )
+
+    def __rshift__(self, other):
+        return Vec3(
+            self.x >> other,
+            self.y >> other,
+            self.z >> other
+        )
     
     def __eq__(self, other):
         return self.x == other.x and \
@@ -45,8 +52,7 @@ class Vec3:
 @dataclass
 class Node:
     children: list
-    position: Vec3
-    depth: int
+    data: any
     
 map_pos = {
     1: Vec3(0,0,0),
@@ -74,36 +80,43 @@ map_child = {
 
 def create_full_tree(depth, position = Vec3(0,0,0), counter = 1):
     if counter == depth:
-        return Node([],position,counter)
+        return Node([None for _ in range(8)],(position, counter))
     
-    return Node([create_full_tree(depth, position + map_pos[i+1] << (counter-1), counter+1) for i in range(8)], position, counter)
+    return Node([create_full_tree(depth, position + map_pos[i+1] << (counter-1), counter+1) for i in range(8)],(position, counter))
 
-def bfs_find_node(root: Node, target: Vec3, depth: int):
-    # naive code
-    if (root.position == target) and (root.depth == depth):
-        return root
+## naive code
+# def bfs_find_node(root: Node, target: Vec3, depth: int):
+#     if (root.position == target) and (root.depth == depth):
+#         return root
 
-    for node in root.children:
-        value = bfs_find_node(node, target, depth)
-        if value != None:
-            return value
+#     for node in root.children:
+#         value = bfs_find_node(node, target, depth)
+#         if value != None:
+#             return value
 
 # use postion as map
-def find_position(root: Node, target: Vec3, depth: int, count = 0):
-    idx = map_child[target & Vec3(1,1,1) << count]
-    if root.depth == depth:
-        return root
-    
-    return find_position(root.children[idx-1], target, depth, count+1)
+def find_position(root: Node, target: Vec3, depth: int):
+    for i in range(depth-1):
+        idx = map_child[(target >> i) & Vec3(1,1,1)]
+        node = root.children[idx-1]
+        if node == None:
+            return None
+        else:
+            root = node
+        
+    return root
+
+def addr_to_abs(position: Vec3, max_depth):
+    return sum((((position >> i) & Vec3(1,1,1))*(1/2**(i+1)) for i in range(max_depth-1)), start=Vec3(0,0,0))
 
 
-root = create_full_tree(3)
+root = create_full_tree(2)
 pprint.pp(root)
 
-search = find_position(root, Vec3(1,0,0), 2)
+print(addr_to_abs(Vec3(6,2,4), 5))
+
+search = find_position(root, Vec3(2,2,2), 3)
 if search != None:
-    print(search.position, search.depth)
+    print(search.data)
 else:
     print("Found Nothing")
-
-# pprint.pp(root)
