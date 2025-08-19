@@ -34,10 +34,10 @@
 !-----------------------------------------------------------------------
 
 !.....numerics..........................................................
-      integer, parameter :: nxg=240 !number of zones along x direction
-      integer, parameter :: nyg=240 !number of zones along y direction
-      integer, parameter :: nzg=240 !number of zones along z direction
-      integer, parameter :: nmax=240 !maximum n for a local cube
+      integer, parameter :: nxg=64 !number of zones along x direction
+      integer, parameter :: nyg=64 !number of zones along y direction
+      integer, parameter :: nzg=64 !number of zones along z direction
+      integer, parameter :: nmax=64 !maximum n for a local cube
       integer, parameter :: yzbuf=4 !permanent xyz overlap between cubes
       integer, parameter :: buf=11 !permanent+volatile buffer length
 
@@ -56,8 +56,8 @@
      &  glbpath='./data/'   !path for restart files
      character(20), parameter :: &
      &  logdir='./logs/'   !path for logfiles
-      integer, parameter :: skip=5    !skip for bin and txt output 5
-      integer, parameter :: dmpskip=5 !skip for restart files 5
+      integer, parameter :: skip=1    !skip for bin and txt output 5
+      integer, parameter :: dmpskip=10 !skip for restart files 5
       integer :: restart=0 !where to restart
 
 !-----------------------------------------------------------------------

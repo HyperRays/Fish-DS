@@ -113,21 +113,25 @@
       allocate(sl(ns,nxl%l,ny%l,nz%l),sr(ns,nxr%l,ny%l,nz%l), &
      &  vl(3,nv,nxl%l,ny%l,nz%l),vr(3,nv,nxr%l,ny%l,nz%l))
 
-!.....write boundaries to send buffer...................................
-      call prof_enter(2,'copy and communication')
+!.....write boundaries to send buffer (single CPU version)...............
+      call prof_enter(2,'copy and periodic boundaries')
       srs = ns*b1*ny%l*nz%l
       srv = 3*nv*b1*ny%l*nz%l
+      ! Apply periodic boundaries directly for single CPU
       send0(1:srs) = &
-     &  reshape(s(:,nx%m+yzbin:nx%m+yzbin+b1-1,:,:),(/ srs /))
-      send0(srs+1:srs+srv) = &
-     &  reshape(v(:,:,nx%m+yzbin:nx%m+yzbin+b1-1,:,:),(/ srv /))
-      send1(1:srs) = &
      &  reshape(s(:,nx%n-yzbin-b1+1:nx%n-yzbin,:,:),(/ srs /))
-      send1(srs+1:srs+srv) = &
+      send0(srs+1:srs+srv) = &
      &  reshape(v(:,:,nx%n-yzbin-b1+1:nx%n-yzbin,:,:),(/ srv /))
+      send1(1:srs) = &
+     &  reshape(s(:,nx%m+yzbin:nx%m+yzbin+b1-1,:,:),(/ srs /))
+      send1(srs+1:srs+srv) = &
+     &  reshape(v(:,:,nx%m+yzbin:nx%m+yzbin+b1-1,:,:),(/ srv /))
+      ! Copy to receive buffers immediately (no communication needed)
+      recv0(1:srs+srv) = send0(1:srs+srv)
+      recv1(1:srs+srv) = send1(1:srs+srv)
 
-!.....initiate communication............................................
-      call comm_mpistartall(nx%requests)
+!.....no communication needed for single CPU............................
+      ! call comm_mpistartall(nx%requests) - not needed
 
 !.....copy boundaries of s,v into work arrays sl,vl,sr,vr...............
       sl(:,nxtm:nxtm+b2-1,:,:) = s(:,nxm:nxm+b2-1,:,:)       !left
@@ -141,9 +145,9 @@
       call update(forward,s,v,nx,ny,nz,dt)
       call prof_exit(8)
 
-!.....wait for communication to complete................................
-      call prof_enter(2,'copy and communication')
-      call comm_mpiwaitall(nx%requests)
+!.....no wait needed for single CPU version.............................
+      call prof_enter(2,'copy and periodic boundaries')
+      ! call comm_mpiwaitall(nx%requests) - not needed for single CPU
 
 !.....fetch boundaries of sl,vl,sr,vr from receive buffer...............
       sshape = (/ ns,b1,ny%l,nz%l /)

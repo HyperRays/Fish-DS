@@ -73,10 +73,10 @@
 11      format(72('-'))
       enddo
 
-!.....finalize MPI......................................................
+!.....finalize single CPU version......................................
 100   continue
       if (mr.eq.0) write(6,*) 'Info: done'
-      call mpi_finalize(ierr)
+      ! call mpi_finalize(ierr) - not needed for single CPU version
 
       end program fish
 

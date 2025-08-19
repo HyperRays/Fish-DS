@@ -55,9 +55,8 @@
           end do
         end do
       end do
-      call prof_enter(31,'allreduce in calcfl')
-      call mpi_allreduce(cm,cmax,1,MPI_DOUBLE_PRECISION, &
-     &  MPI_MAX,MPI_COMM_WORLD,ierr) 
+      call prof_enter(31,'single CPU max in calcfl')
+      cmax = cm  ! Single CPU version - no MPI reduction needed
       call prof_exit(31)
       write(6,*) 'cmax:',cmax
       cfl = 1./cmax

@@ -138,7 +138,6 @@
         write(6,*) 'Info: Stop file detected in ',trim(txtpath), &
      &    ', process ',mr
         call prof_write(mr)
-        call mpi_finalize(ierr)
         stop
       endif
 
