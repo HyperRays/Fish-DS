@@ -29,12 +29,11 @@ contains
         
     end subroutine index_to_3d
 
-    subroutine get_neighbor_index(index, neighbor, nx,ny,nz, indexout, error)
+    subroutine get_neighbor_index(index, neighbor, nx,ny,nz, indexout)
         integer, intent(in) :: index
         integer, dimension(3), intent(in) :: neighbor
         integer, intent(out) :: indexout
         type(comm_wld), intent(in) :: nx,ny,nz
-        logical, intent(out) :: error
         integer :: indices3D(3)
         integer :: new_indices(3)
         integer :: i
@@ -44,32 +43,11 @@ contains
             new_indices(i) = indices3D(i) + neighbor(i)
         end do
 
-        ! Check bounds
-        if (new_indices(1) < 1 .or. new_indices(1) > nx%l .or. &
-            new_indices(2) < 1 .or. new_indices(2) > ny%l .or. &
-            new_indices(3) < 1 .or. new_indices(3) > nz%l) then
-            error = .true.
-            indexout = -1
-            return
-        else
-            error = .false.
-        end if
-
         ! Convert new_indices back to linear index using row-major ordering
         ! linear index = (i-1) + (j-1)*nx%l + (k-1)*nx%l*ny%l
         indexout = (new_indices(1)-1) + (new_indices(2)-1)*nx%l + (new_indices(3)-1)*nx%l*ny%l + 1
 
     end subroutine get_neighbor_index
-
-    subroutine is_out_of_bounds(indices, nx, ny, nz, out_of_bounds)
-        integer, dimension(3), intent(in) :: indices
-        type(comm_wld), intent(in) :: nx, ny, nz
-        logical, intent(out) :: out_of_bounds
-
-        out_of_bounds = (indices(1) < 1 .or. indices(1) > nx%l-1 .or. &
-                         indices(2) < 1 .or. indices(2) > ny%l-1 .or. &
-                         indices(3) < 1 .or. indices(3) > nz%l-1)
-    end subroutine is_out_of_bounds
 
     subroutine scalar_array(array, index, nx, ny, nz, values)
 

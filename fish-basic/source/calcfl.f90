@@ -66,16 +66,16 @@
 !       end do
 
       call linear_count(nx, ny, nz, count)
-      
-      cm = 0.
-      do idx=1, count-1
 
+!.....calculate time step limit.........................................
+      cm = 0.
+      do idx=1, count
+!.....limit on Euler step...............................................
+
+        ! neighbours needed in cfl calc are +1 in all x,y,z directions
+        ! to avoid out of bounds accesses, the last cells are skipped
         call index_to_3d(idx, indices3D, nx, ny, nz)
-        call is_out_of_bounds(indices3D, nx, ny, nz, nerror)
-        if (nerror) then 
-          ! write(6, *) "Skipping, out of bounds"
-          cycle
-        endif
+        if (indices3D(1) > nx%l-1 .or. indices3D(2) > ny%l-1 .or. indices3D(3) > nz%l-1 ) cycle
 
         call scalar_array(s, idx, nx, ny, nz, ss)
         call eos(ss(md),ss(ms),p,cs,status)
@@ -85,24 +85,22 @@
             write(6,*) 'index:', idx
             call index_to_3d(idx, indices3D, nx, ny, nz)
             write(6,*) 'indices:', indices3D(1), indices3D(2), indices3D(3)
+            write(6,*) 'array size:', shape(s)
             write(6,*) 'd,e: ',ss(md),ss(ms)/ss(md)
             call comm_mpistop('calcfl')
         endif
 
         call vector_array(v, idx, nx, ny, nz, v1)
 
-        call get_neighbor_index(idx, xn, nx,ny,nz, nidx, nerror)
-        if (nerror) cycle
+        call get_neighbor_index(idx, xn, nx,ny,nz, nidx)
         call vector_array(v, nidx, nx, ny, nz, v2)
         bb(1) = 0.5*(v1(1,mb)+v2(1,mb))
 
-        call get_neighbor_index(idx, yn, nx,ny,nz, nidx, nerror)
-        if (nerror) cycle
+        call get_neighbor_index(idx, yn, nx,ny,nz, nidx)
         call vector_array(v, nidx, nx, ny, nz, v2)
         bb(2) = 0.5*(v1(2,mb)+v2(2,mb))
 
-        call get_neighbor_index(idx, zn, nx,ny,nz, nidx, nerror)
-        if (nerror) cycle
+        call get_neighbor_index(idx, zn, nx,ny,nz, nidx)
         call vector_array(v, nidx, nx, ny, nz, v2)
         bb(3) = 0.5*(v1(3,mb)+v2(3,mb))
 
@@ -111,6 +109,7 @@
         vv = v1(:,mv)/ss(md)
         c = sqrt(sum(vv*vv)) + csig
 
+!.....cfl time step.....................................................
         cm = max(cm,c)
       end do
 
