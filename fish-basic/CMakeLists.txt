@@ -8,7 +8,7 @@ set(CMAKE_Fortran_STANDARD_REQUIRED ON)
 
 # Default build type
 if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Release)
+    set(CMAKE_BUILD_TYPE Debug)
 endif()
 
 # Output directories
