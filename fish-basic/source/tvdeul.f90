@@ -7,6 +7,7 @@
       subroutine tvdeul(s,v,n,dt,b,bsqrin)
 
       use mhd_parameter_module
+      use eos_module
 
       implicit none
 

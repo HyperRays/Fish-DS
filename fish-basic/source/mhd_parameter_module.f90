@@ -49,13 +49,13 @@
 !.....file handling.....................................................
       character(12), parameter :: name='data' !name of run
       character(44), parameter :: &
-     &  binpath='./data/' !path for binaries
+     &  binpath='@DATA_PATH@' !path for binaries
       character(44), parameter :: &
-     &  txtpath='./data/'  !path for ascii
+     &  txtpath='@DATA_PATH@'  !path for ascii
       character(44), parameter :: &
-     &  glbpath='./data/'   !path for restart files
+     &  glbpath='@DATA_PATH@'   !path for restart files
      character(20), parameter :: &
-     &  logdir='./logs/'   !path for logfiles
+     &  logdir='@LOGS_PATH@'   !path for logfiles
       integer, parameter :: skip=1    !skip for bin and txt output 5
       integer, parameter :: dmpskip=10 !skip for restart files 5
       integer :: restart=0 !where to restart

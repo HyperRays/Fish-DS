@@ -5,6 +5,9 @@
 !=======================================================================
 
       subroutine transposef(s,v,nx,ny,nz)
+      
+        use mhd_parameter_module, only: ns, nv
+        use prof_module
 
       implicit none
 
@@ -62,6 +65,9 @@
 !=======================================================================
 
       subroutine transposeb(s,v,nx,ny,nz)
+
+        use mhd_parameter_module, only: ns, nv
+        use prof_module
 
       implicit none
 

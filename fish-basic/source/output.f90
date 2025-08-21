@@ -7,6 +7,7 @@
       subroutine output(num,time,s,v,nx,ny,nz)
 
       use comm_module
+      use prof_module
 
       implicit none
 

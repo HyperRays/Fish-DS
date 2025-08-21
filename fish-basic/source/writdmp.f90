@@ -8,7 +8,8 @@
 
       use comm_module
 !cscs: iflport for ifort compiler
-    use iflport, dummy1=>time,dummy2=>date !required for ifort
+      use iflport, dummy1=>time,dummy2=>date !required for ifort
+      use prof_module
 
       implicit none
 

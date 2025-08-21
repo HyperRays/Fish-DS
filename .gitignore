@@ -31,6 +31,9 @@
 *.out
 *.app
 
+# Generated Data
+*.dat
+
 # file destination directories
 fish-basic/dest/*
 fish-basic/data/*
@@ -39,3 +42,4 @@ fish-basic/logs/*
 
 fish-basic/fish
 saves
+fish-basic/build/*

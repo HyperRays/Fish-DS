@@ -22,7 +22,7 @@
       use comm_module
       use mhd_parameter_module
       use prof_module
-
+      
       implicit none
 
 !.....interface for empty sweeps for boundary update....................
@@ -82,15 +82,19 @@
       subroutine mhd_initialization(iter,time)
 
       integer,intent(out) :: iter
+      integer :: iter_dup
       real, intent(out) :: time
 
 !-----------------------------------------------------------------------
-
+      
       logical :: forward=.true.
       real :: dummy=0.
 
+      !compiler bug workaround
+      iter_dup = iter
+
 !.....read file or setup initial conditions.............................
-      call readdmp(iter,time,s,v,nx,ny,nz)
+      call readdmp(iter_dup,time,s,v,nx,ny,nz)
 !.....update buffers with initial conditions............................
       call sweep(forward,empty,0,1,yzbuf,s,v,nx,ny,nz,dummy)        !x
       call transposef(s,v,nx%l,ny%l,nz%l)
@@ -195,19 +199,6 @@
       dt = cflsav*cfl
 
       end subroutine mhd_cfl
-
-!=======================================================================
-!
-!     further internal subroutines
-!
-!=======================================================================
-
-      include 'calcfl.f90'
-      include 'transpose.f90'
-      include 'sweep.f90'
-      include 'readdmp.f90'
-      include 'writdmp.f90'
-      include 'output.f90'
 
 !=======================================================================
 

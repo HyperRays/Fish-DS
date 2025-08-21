@@ -1,8 +1,16 @@
 !=======================================================================
 !
-!     eos
+!     eos module - equation of state
 !
 !=======================================================================
+
+      module eos_module
+
+      use mhd_parameter_module
+
+      implicit none
+
+      contains
 
       subroutine eos(d,e,p,cs,status)
 
@@ -37,4 +45,4 @@
 
       end subroutine eos
 
-!=======================================================================
+      end module eos_module

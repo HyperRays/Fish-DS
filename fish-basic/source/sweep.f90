@@ -7,6 +7,7 @@
       subroutine sweep(forward,update,yzbin,xb,yzbout,s,v,nx,ny,nz,dt)
 
       use comm_module
+      use prof_module
 
       implicit none
 
